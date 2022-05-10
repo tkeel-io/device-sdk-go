@@ -7,10 +7,9 @@
 ### 组织结构 --TODO
 
 - __adapter__ - 对 [paho.mqtt](github.com/eclipse/paho.mqtt.golang) 的封装
-- __tkeel__ - 使用 mqtt 发送服务 tkeel 平台消息规范的设备数据 
+- __tkeel__ - 使用 mqtt 发送服务 tkeel 平台消息规范的设备数据
 
 ### 开始使用 -- TODO:
-
 
 ```go
 package main
@@ -27,7 +26,6 @@ import (
     "github.com/tkeel-io/device-sdk-go/tkeel"
     "github.com/tkeel-io/device-sdk-go/util/wait"
 )
-
 
 func main() {
     log.SetFlags(log.Lshortfile)
@@ -90,10 +88,9 @@ func deviceValue() ([]byte, error) {
 
 ```
 
-
-
 ## 使用
+
 > Assuming you already have [installed](https://golang.org/doc/install) Go
 
-> import xxxsdk
+> import "github.com/tkeel-io/device-sdk-go"
 
