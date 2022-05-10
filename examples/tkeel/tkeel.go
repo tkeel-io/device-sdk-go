@@ -22,6 +22,7 @@ const (
 func main() {
     log.SetFlags(log.Lshortfile)
 
+    // 创建 mqtt
     conn, err := adpt.NewAdaptor(_brokerAddr, "",
         adpt.WithAutoReconnect(true),
         adpt.WithCleanSession(false),
@@ -38,6 +39,7 @@ func main() {
         log.Fatal(err)
     }
 
+    // 订阅设备关心的 topic
     vv := map[tkeel.Topic]tkeel.TopicHandle{
         tkeel.RawTopic:       rawTopicHandler,
         tkeel.CommandTopic:   commandsTopicHandler,

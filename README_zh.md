@@ -30,6 +30,7 @@ import (
 func main() {
     log.SetFlags(log.Lshortfile)
 
+    // 创建连接平台的 Adaptor
     conn, err := adpt.NewAdaptor(brokerAddr, "",
         adpt.WithAutoReconnect(true),
         adpt.WithCleanSession(false),
@@ -46,6 +47,7 @@ func main() {
         log.Fatal(err)
     }
 
+    // 订阅设备关心的 topic
     vv := map[tkeel.Topic]tkeel.TopicHandle{
         tkeel.RawTopic:       rawTopicHandler,
         tkeel.CommandTopic:   commandsTopicHandler,
