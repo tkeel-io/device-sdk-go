@@ -1,4 +1,4 @@
-package device_sdk_go
+package adapter
 
 // Adaptor is the interface that describes an adaptor
 type Adaptor interface {

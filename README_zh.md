@@ -1,3 +1,18 @@
+# tkeel device sdk for go
+
+接入设备使用 SDK 将数据方便的推送到 tkeel 平台，并订阅平台下发的数据
+
+## 描述
+
+### 组织结构 --TODO
+
+- __adapter__ - 对 [paho.mqtt](github.com/eclipse/paho.mqtt.golang) 的封装
+- __tkeel__ - 使用 mqtt 发送服务 tkeel 平台消息规范的设备数据 
+
+### 开始使用 -- TODO:
+
+
+```go
 package main
 
 import (
@@ -13,26 +28,21 @@ import (
     "github.com/tkeel-io/device-sdk-go/util/wait"
 )
 
-const (
-    _brokerAddr = "tcp://139.198.112.150:1883"
-    _username   = "iotd-b5d6cd97-8d0c-4211-b80a-89486efebff3"
-    _pwd        = "ZjU1ZjU3NmItZjM0NC0zOTcxLThlYzYtYjFhM2U0N2IyZDFj"
-)
 
 func main() {
     log.SetFlags(log.Lshortfile)
 
-    conn, err := adpt.NewAdaptor(_brokerAddr, "",
+    conn, err := adpt.NewAdaptor(brokerAddr, "",
         adpt.WithAutoReconnect(true),
         adpt.WithCleanSession(false),
-        adpt.WithUserName(_username),
-        adpt.WithPassword(_pwd),
+        adpt.WithUserName(username),
+        adpt.WithPassword(pwd),
     )
     if err != nil {
         panic(err)
     }
 
-    tk, err := tkeel.New("_brokerAddr", conn)
+    tk, err := tkeel.New("teek", conn)
 
     if err != nil {
         log.Fatal(err)
@@ -77,3 +87,13 @@ func deviceValue() ([]byte, error) {
     }
     return json.Marshal(mv)
 }
+
+```
+
+
+
+## 使用
+> Assuming you already have [installed](https://golang.org/doc/install) Go
+
+> import xxxsdk
+

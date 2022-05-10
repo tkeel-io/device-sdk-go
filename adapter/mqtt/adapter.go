@@ -8,7 +8,7 @@ import (
     "io/ioutil"
 
     paho "github.com/eclipse/paho.mqtt.golang"
-    multierror "github.com/hashicorp/go-multierror"
+    "github.com/hashicorp/go-multierror"
 
     "github.com/pkg/errors"
 )
@@ -117,6 +117,10 @@ func (a *Adaptor) OnWithQOS(event string, qos int, f func(msg Message)) (paho.To
     return token, nil
 }
 
+func (a *Adaptor) Unsubscribe(topics ...string) {
+    a.client.Unsubscribe(topics...)
+}
+
 // Name returns the MQTT Adaptor's name
 func (a *Adaptor) Name() string { return a.name }
 
@@ -156,15 +160,15 @@ func (a *Adaptor) createClientOptions() *paho.ClientOptions {
     opts.AddBroker(a.Host)
     opts.SetClientID(a.opts.clientID)
     if a.opts.username != "" && a.opts.password != "" {
-       opts.SetPassword(a.opts.password)
-       opts.SetUsername(a.opts.username)
+        opts.SetPassword(a.opts.password)
+        opts.SetUsername(a.opts.username)
     }
     opts.AutoReconnect = a.opts.autoReconnect
 
     //opts.CleanSession = a.opts.cleanSession
     //
     if a.UseSSL() {
-       opts.SetTLSConfig(a.newTLSConfig())
+        opts.SetTLSConfig(a.newTLSConfig())
     }
     return opts
 }
