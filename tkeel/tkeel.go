@@ -2,6 +2,7 @@ package tkeel
 
 import (
     adapt "github.com/tkeel-io/device-sdk-go/adapter/mqtt"
+    "log"
 )
 
 //type Telemetry struct {
@@ -41,14 +42,17 @@ func (cli *Client) Attribute(msg []byte) error {
 func (cli *Client) On(t Topic, f func(msg adapt.Message)) error {
     if _, ok := cli.subTopics[t]; !ok {
         cli.subTopics[t] = struct{}{}
+        log.Println(t.String())
+        return cli.conn.On(t.String(), f)
     }
-    return cli.conn.On(string(t), f)
+
+    return nil
 }
 
 func (cli *Client) Finalize() error {
     if cli.clearSubTopic && len(cli.subTopics) > 0 {
         for t, _ := range cli.subTopics {
-            cli.conn.Unsubscribe(string(t))
+            cli.conn.Unsubscribe(t.String())
         }
     }
     return cli.conn.Finalize()

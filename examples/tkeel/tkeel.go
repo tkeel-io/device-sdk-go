@@ -15,8 +15,8 @@ import (
 
 const (
     _brokerAddr = "tcp://139.198.112.150:1883"
-    _username   = "iotd-b5d6cd97-8d0c-4211-b80a-89486efebff3"
-    _pwd        = "ZjU1ZjU3NmItZjM0NC0zOTcxLThlYzYtYjFhM2U0N2IyZDFj"
+    _username   = "iotd-6c99043f-90ef-4f94-baa1-b1e4c0be46ee"
+    _pwd        = "NzYxZWFhYmYtMGY0OC0zNGUxLWIwYTktMjVjODdlZjI1MDgw"
 )
 
 func main() {
@@ -39,6 +39,8 @@ func main() {
         log.Fatal(err)
     }
 
+    defer tk.Finalize()
+
     // 订阅设备关心的 topic
     vv := map[tkeel.Topic]tkeel.TopicHandle{
         tkeel.RawTopic:       rawTopicHandler,
@@ -57,6 +59,8 @@ func main() {
         // 推送遥测数据
         tk.Telemetry(v)
     }, tm)
+
+    select {}
 }
 
 func attributesTopicHandler(message adpt.Message) {
