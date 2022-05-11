@@ -75,6 +75,10 @@ func NewClient(address, username, passwd string) (Client, error) {
     ops.ConnectRetry = true
     //
     cli := paho.NewClient(ops)
+
+    if token := cli.Connect(); token.Wait() && token.Error() != nil {
+        return nil, token.Error()
+    }
     //
     return &MqttClient{
         conn: cli,

@@ -15,8 +15,8 @@ import (
 
 const (
     _brokerAddr = "tcp://139.198.112.150:1883"
-    _username   = "iotd-6ec3cd51-49b1-4893-a1cd-5f760974c0ac"
-    _pwd        = "NzM3ZTg5ZWMtNTM1Yy0zMzRjLWI3YzEtMjE1NjY2NGVkMmZm"
+    _username   = "iotd-2bd04d55-a2a2-4403-83b9-054c79d88f14"
+    _pwd        = "NTNjZWVjZjktZTNiZi0zZjRlLTk4NGQtMjc1M2E2N2UxMzgy"
 )
 
 func main() {
