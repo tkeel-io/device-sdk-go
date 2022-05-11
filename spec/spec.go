@@ -1,4 +1,6 @@
-package tkeel
+package spec
+
+type Topic int
 
 const (
     _rawTopic       = "v1/devices/me/raw"
@@ -7,8 +9,6 @@ const (
     _cmdTopic       = "v1/devices/me/commands"
     _cmdTopicResp   = "v1/devices/me/command/response"
 )
-
-type Topic int
 
 const (
     RawTopic Topic = 1 << iota
