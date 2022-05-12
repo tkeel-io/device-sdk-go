@@ -2,6 +2,10 @@ package client
 
 import (
     "context"
+    "crypto/tls"
+    "crypto/x509"
+    "github.com/hashicorp/go-multierror"
+    "io/ioutil"
 
     paho "github.com/eclipse/paho.mqtt.golang"
     "github.com/tkeel-io/device-sdk-go/spec"
@@ -33,7 +37,20 @@ type Client interface {
 type MessageHandler = paho.MessageHandler
 
 type MqttClient struct {
-    conn paho.Client
+    autoReconnect bool
+    useSSL        bool
+    cleanSession  bool
+    qos           int
+    name          string
+    host          string
+    clientID      string
+    username      string
+    password      string
+    serverCert    string
+    clientCert    string
+    clientKey     string
+
+    client paho.Client
 }
 
 func (mc *MqttClient) Raw(ctx context.Context, payload interface{}) error {
@@ -61,35 +78,101 @@ func (mc *MqttClient) OnCommand(ctx context.Context, handler MessageHandler) err
 }
 
 func (mc *MqttClient) Close() {
-    if mc != nil && mc.conn != nil {
-        mc.conn.Disconnect(10000)
+    if mc != nil && mc.client != nil {
+        mc.client.Disconnect(10000)
     }
 }
 
-func NewClient(address, username, passwd string) (Client, error) {
-    //
-    ops := paho.NewClientOptions()
-    ops.Username = username
-    ops.Password = passwd
-    ops.AutoReconnect = true
-    ops.ConnectRetry = true
-    ops.AddBroker(address)
-    //
-    cli := paho.NewClient(ops)
-
-    if token := cli.Connect(); token.Wait() && token.Error() != nil {
-        return nil, token.Error()
-    }
-    //
+func NewClient(host, username, passwd string) Client {
     return &MqttClient{
-        conn: cli,
-    }, nil
+        autoReconnect: false,
+        useSSL:        false,
+        cleanSession:  false,
+        qos:           0,
+        name:          "",
+        host:          host,
+        clientID:      "",
+        username:      username,
+        password:      passwd,
+        serverCert:    "",
+        clientCert:    "",
+        clientKey:     "",
+        client:        nil,
+    }
 }
 
 func (mc *MqttClient) publish(topic spec.Topic, payload interface{}) error {
-    return mc.conn.Publish(topic.String(), 0, false, payload).Error()
+    return mc.client.Publish(topic.String(), byte(mc.qos), false, payload).Error()
 }
 
 func (mc *MqttClient) on(topic spec.Topic, handler MessageHandler) error {
-    return mc.conn.Subscribe(topic.String(), 0, handler).Error()
+    return mc.client.Subscribe(topic.String(), byte(mc.qos), handler).Error()
+}
+
+// Connect returns true if connection to mqtt is established
+func (mc *MqttClient) Connect() (err error) {
+    mc.client = paho.NewClient(mc.createClientOptions())
+    if token := mc.client.Connect(); token.Wait() && token.Error() != nil {
+        err = multierror.Append(err, token.Error())
+    }
+    return
+}
+
+func (mc *MqttClient) createClientOptions() *paho.ClientOptions {
+    opts := paho.NewClientOptions()
+    opts.AddBroker(mc.host)
+    opts.SetClientID(mc.clientID)
+    if mc.username != "" && mc.password != "" {
+        opts.SetPassword(mc.password)
+        opts.SetUsername(mc.username)
+    }
+    opts.AutoReconnect = mc.autoReconnect
+    opts.CleanSession = mc.cleanSession
+
+    //if mc.UseSSL() {
+    //opts.SetTLSConfig(mc.newTLSConfig())
+    //}
+    return opts
+}
+
+// newTLSConfig sets the TLS config in the case that we are using
+// an MQTT broker with TLS
+func (mc *MqttClient) newTLSConfig() *tls.Config {
+    // Import server certificate
+    var certpool *x509.CertPool
+    if len(mc.ServerCert()) > 0 {
+        certpool = x509.NewCertPool()
+        pemCerts, err := ioutil.ReadFile(mc.ServerCert())
+        if err == nil {
+            certpool.AppendCertsFromPEM(pemCerts)
+        }
+    }
+
+    // Import client certificate/key pair
+    var certs []tls.Certificate
+    if len(mc.ClientCert()) > 0 && len(mc.ClientKey()) > 0 {
+        cert, err := tls.LoadX509KeyPair(mc.ClientCert(), mc.ClientKey())
+        if err != nil {
+            // TODO: proper error handling
+            panic(err)
+        }
+        certs = append(certs, cert)
+    }
+
+    // Create tls.Config with desired tls properties
+    return &tls.Config{
+        // RootCAs = certs used to verify server cert.
+        RootCAs: certpool,
+        // ClientAuth = whether to request cert from server.
+        // Since the server is set up for SSL, this happens
+        // anyways.
+        ClientAuth: tls.NoClientCert,
+        // ClientCAs = certs used to validate client cert.
+        ClientCAs: nil,
+        // InsecureSkipVerify = verify that cert contents
+        // match server. IP matches what is in cert etc.
+        InsecureSkipVerify: false,
+        // Certificates = list of certs client sends to server.
+        Certificates: certs,
+    }
 }

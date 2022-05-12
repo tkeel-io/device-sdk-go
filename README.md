@@ -1,13 +1,50 @@
 # tkeel device sdk for go
 
+---
 
-## Usage
-> Assuming you already have [installed](https://golang.org/doc/install) Go
+Connect devices to the tKeel IoT Hub.
 
-device-sdk-go includes two packages
+Go device sdk includes the following packages:
 
 - __client__ use [paho.mqtt](github.com/eclipse/paho.mqtt.golang) pub/sub mqtt msg
-- __spec__ provide topics that communicate with the platform
+- __spec__ provide message spec topics that communicate with the platform, you can find the
+  spec [here](https://docs.tkeel.io/developer_cookbook/iothub/message_spec)
+- __samples__ showing how to use the SDK
+
+## Go Device SDK Features
+
+---
+
+- Sends raw/telemetry/attribute data to IoT Hub.
+- Recv raw/attribute/command data from IoT Hub
+- Supports transport protocols: MQTT/MQTTs.
+- Supports auto reconnect.
+
+---
+
+## SDK API List
+
+---
+
+|         API         | Function                                   |
+| :------------------ | :----------------------------------------- |
+| PublishRaw        | publish raw message |
+| PublishTelemetry | publish  telemetry |
+| PublishAttribute  | publish attribute message |
+| SubscribeRaw   | subscribe raw message from IoT Hub |
+| SubscribeAttribute   | subscribe attribute message from IoT Hub |
+| SubscribeCommand   | subscribe raw command message from IoT Hub |
+| Connect      | connect to IoT Hub    |
+| Close      | disconnect from IoT Hub |
+| NewClient      | new client you can config enable tls,qos etc.    |
+
+## Usage
+
+---
+
+> Before use this sdk you'd better read this message spec
+[here](https://docs.tkeel.io/developer_cookbook/iothub/message_spec)
+and assuming you already have [installed](https://golang.org/doc/install) Go
 
 ### Installation of device-sdk-go
 
@@ -28,16 +65,16 @@ import "github.com/dapr/go-sdk/client"
 [examples](examples/tkeel.go)
 
 ```go
-   cli, _ := client.NewClient(_brokerAddr, _username, _pwd)
-   
-   // sub attribute
-   cli.OnAttribute(context.TODO(), attributesTopicHandler)
-   
-   // pub telemetry
-   cli.Telemetry(ctx, v)
-   
-   // close client
-   cli.Close()
+cli, _ := client.NewClient(_brokerAddr, _username, _pwd)
+
+// sub attribute
+cli.OnAttribute(context.TODO(), attributesTopicHandler)
+
+// pub telemetry
+cli.Telemetry(ctx, v)
+
+// close client
+cli.Close()
 ```
 
 
