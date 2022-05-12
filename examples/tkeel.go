@@ -22,7 +22,10 @@ const (
 func main() {
     log.SetFlags(log.Lshortfile)
 
-    cli, _ := client.NewClient(_brokerAddr, _username, _pwd)
+    cli, err := client.NewClient(_brokerAddr, _username, _pwd)
+    if err != nil {
+        panic(err)
+    }
 
     cli.OnAttribute(context.TODO(), attributesTopicHandler)
     cli.OnCommand(context.TODO(), commandsTopicHandler)

@@ -73,6 +73,7 @@ func NewClient(address, username, passwd string) (Client, error) {
     ops.Password = passwd
     ops.AutoReconnect = true
     ops.ConnectRetry = true
+    ops.AddBroker(address)
     //
     cli := paho.NewClient(ops)
 
