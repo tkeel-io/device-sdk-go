@@ -13,8 +13,8 @@ Go device sdk includes the following packages:
 ## Go Device SDK Features
 
 
-- Sends raw/telemetry/attribute data to IoT Hub.
-- Recv raw/attribute/command data from IoT Hub
+- Sends raw/telemetry/attribute message to IoT Hub.
+- Recv raw/attribute/command message from IoT Hub
 - Supports transport protocols: MQTT/MQTTs.
 - Supports auto reconnect.
 
@@ -24,7 +24,7 @@ Go device sdk includes the following packages:
 |         API         | Function                                   |
 | :------------------ | :----------------------------------------- |
 | PublishRaw        | publish raw message |
-| PublishTelemetry | publish  telemetry |
+| PublishTelemetry | publish  telemetry message|
 | PublishAttribute  | publish attribute message |
 | SubscribeRaw   | subscribe raw message from IoT Hub |
 | SubscribeAttribute   | subscribe attribute message from IoT Hub |
@@ -56,10 +56,12 @@ import "github.com/dapr/go-sdk/client"
 
 ### Quick start:
 
-[examples](examples/tkeel.go)
-
 ```go
+// create client
 cli, _ := client.NewClient(_brokerAddr, _username, _pwd)
+
+// connect to IoT Hub
+cli.Connect(...)
 
 // sub attribute
 cli.OnAttribute(context.TODO(), attributesTopicHandler)
@@ -71,4 +73,6 @@ cli.Telemetry(ctx, v)
 cli.Close()
 ```
 
+## Samples
+[examples](examples/tkeel.go)
 
