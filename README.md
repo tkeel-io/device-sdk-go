@@ -1,6 +1,5 @@
 # tkeel device sdk for go
 
----
 
 Connect devices to the tKeel IoT Hub.
 
@@ -13,18 +12,14 @@ Go device sdk includes the following packages:
 
 ## Go Device SDK Features
 
----
 
 - Sends raw/telemetry/attribute data to IoT Hub.
 - Recv raw/attribute/command data from IoT Hub
 - Supports transport protocols: MQTT/MQTTs.
 - Supports auto reconnect.
 
----
-
 ## SDK API List
 
----
 
 |         API         | Function                                   |
 | :------------------ | :----------------------------------------- |
@@ -40,7 +35,6 @@ Go device sdk includes the following packages:
 
 ## Usage
 
----
 
 > Before use this sdk you'd better read this message spec
 [here](https://docs.tkeel.io/developer_cookbook/iothub/message_spec)
