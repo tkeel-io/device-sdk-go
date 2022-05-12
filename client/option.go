@@ -3,7 +3,7 @@ package client
 type mqttClientOptions struct {
     autoReconnect bool
     useSSL        bool
-    cleanSession  bool
+    //cleanSession  bool
     qos           int
     clientID      string
     serverCert    string
@@ -42,13 +42,6 @@ func WithAutoReconnect(b bool) Option {
     })
 }
 
-// WithCleanSession  sets the MQTT AutoReconnect setting
-func WithCleanSession(b bool) Option {
-    return newFuncOption(func(o *mqttClientOptions) {
-        o.cleanSession = b
-    })
-}
-
 func WithQoS(i int) Option {
     return newFuncOption(func(o *mqttClientOptions) {
         o.qos = i
@@ -65,7 +58,6 @@ func defaultMqttClientOptions() *mqttClientOptions {
     return &mqttClientOptions{
         autoReconnect: false,
         useSSL:        false,
-        cleanSession:  false,
         qos:           0,
         clientID:      "",
         serverCert:    "",

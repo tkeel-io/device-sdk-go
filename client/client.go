@@ -108,13 +108,11 @@ func (mc *MqttClient) Connect() (err error) {
 func (mc *MqttClient) createClientOptions() *paho.ClientOptions {
     opts := paho.NewClientOptions()
     opts.AddBroker(mc.host)
-    opts.SetClientID(mc.opts.clientID)
+
     if mc.username != "" && mc.password != "" {
         opts.SetPassword(mc.password)
         opts.SetUsername(mc.username)
     }
-    opts.AutoReconnect = mc.opts.autoReconnect
-    opts.CleanSession = mc.opts.cleanSession
 
     if mc.opts.useSSL {
         opts.SetTLSConfig(mc.newTLSConfig())

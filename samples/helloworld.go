@@ -16,8 +16,8 @@ import (
 
 const (
     _brokerAddr = "tcp://139.198.112.150:1883"
-    _username   = "iotd-2bd04d55-a2a2-4403-83b9-054c79d88f14"
-    _pwd        = "NTNjZWVjZjktZTNiZi0zZjRlLTk4NGQtMjc1M2E2N2UxMzgy"
+    _username   = "iotd-a8fb1ca5-b5a0-4bfd-a9d8-8a88d923f9df"
+    _pwd        = "MzY1MGM1NjYtZmVjYy0zOTE3LWIzMzgtMTQyM2IwMWJjMGYw"
 )
 
 func main() {
@@ -25,13 +25,14 @@ func main() {
 
     cli := client.NewClient(_brokerAddr, _username, _pwd)()
 
-    cli.Connect()
-
+    err := cli.Connect()
+    if err != nil {
+        log.Fatalln(err)
+    }
 
     cli.SubscribeRaw(context.TODO(), rawTopicHandler)
     cli.SubscribeAttribute(context.TODO(), attributesTopicHandler)
     cli.SubscribeCommand(context.TODO(), commandsTopicHandler)
-
 
     tm := time.Second * 1
 
@@ -60,7 +61,7 @@ func rawTopicHandler(cli paho.Client, message paho.Message) {
 
 func deviceValue() ([]byte, error) {
     mv := map[string]interface{}{
-        "temperature": rand.Intn(20),
+        "humidity": rand.Intn(20),
     }
     return json.Marshal(mv)
 }
