@@ -46,10 +46,6 @@ and assuming you already have [installed](https://golang.org/doc/install) Go
 go get -u github.com/tkeel-io/device-sdk-go
 ```
 
-### Creating client
-
-Import  `client` package:
-
 ```go
 import "github.com/dapr/go-sdk/client"
 ```
@@ -57,21 +53,41 @@ import "github.com/dapr/go-sdk/client"
 ### Quick start:
 
 ```go
-// create client
-cli, _ := client.NewClient(_brokerAddr, _username, _pwd)
+// create default client
+cli := client.NewClient(_brokerAddr, _username, _pwd)()
 
 // connect to IoT Hub
-cli.Connect(...)
+cli.Connect()
 
 // sub attribute
-cli.OnAttribute(context.TODO(), attributesTopicHandler)
+cli.SubscribeRaw(context.TODO(), rawTopicHandler)
 
 // pub telemetry
-cli.Telemetry(ctx, v)
+cli.PublishTelemetry(ctx, v)
 
 // close client
 cli.Close()
 ```
+
+```go
+// create a client enable tls
+
+cli := client.NewClient(_brokerAddr, _username, _pwd)(
+        client.WithUseSSL(true),
+        client.WithServerCert("your cert file"))
+
+```
+
+### Client Configuration
+
+|         Parameter   | Description        |           Default        |
+| :------------------ | :------------------| :----------------------- |
+|host |IoT Hub broker address| "" |
+|username |Device ID From IoT Hub| "" |
+|password |Device Token From IoT Hub| "" |
+
+> These params above must be set, if you want to enable tls or set qos etc.
+> you can use Withxx func set when new client like **_client.WithQoS(1)_**
 
 ## Samples
 [examples](examples/tkeel.go)

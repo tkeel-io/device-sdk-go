@@ -4,12 +4,13 @@ import (
     "context"
     "encoding/json"
     "fmt"
-    paho "github.com/eclipse/paho.mqtt.golang"
-    "github.com/tkeel-io/device-sdk-go/client"
     "log"
     "math/rand"
     "time"
 
+    paho "github.com/eclipse/paho.mqtt.golang"
+
+    "github.com/tkeel-io/device-sdk-go/client"
     "github.com/tkeel-io/device-sdk-go/util/wait"
 )
 
@@ -22,21 +23,22 @@ const (
 func main() {
     log.SetFlags(log.Lshortfile)
 
-    cli, err := client.NewClient(_brokerAddr, _username, _pwd)
-    if err != nil {
-        panic(err)
-    }
+    cli := client.NewClient(_brokerAddr, _username, _pwd)()
 
-    cli.OnAttribute(context.TODO(), attributesTopicHandler)
-    cli.OnCommand(context.TODO(), commandsTopicHandler)
-    cli.OnRaw(context.TODO(), rawTopicHandler)
+    cli.Connect()
+
+
+    cli.SubscribeRaw(context.TODO(), rawTopicHandler)
+    cli.SubscribeAttribute(context.TODO(), attributesTopicHandler)
+    cli.SubscribeCommand(context.TODO(), commandsTopicHandler)
+
 
     tm := time.Second * 1
 
     wait.EveryWithContext(context.Background(), func(ctx context.Context) {
         v, _ := deviceValue()
         // telemetry
-        cli.Telemetry(ctx, v)
+        cli.PublishTelemetry(ctx, v)
     }, tm)
 
     select {}
