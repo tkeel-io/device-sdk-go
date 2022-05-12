@@ -47,7 +47,7 @@ go get -u github.com/tkeel-io/device-sdk-go
 ```
 
 ```go
-import "github.com/dapr/go-sdk/client"
+import "github.com/tkeel-io/device-sdk-go"
 ```
 
 ### Quick start:
