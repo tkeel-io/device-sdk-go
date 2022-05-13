@@ -1,16 +1,15 @@
 # tkeel device sdk for go
 
 
-Connect devices to the tKeel IoT Hub.
+本章节介绍了如何安装和配置设备 SDK，以及提供了相关例⼦来演示如何使⽤设备 SDK上报设备数据以及服务调⽤
 
-Go device sdk includes the following packages:
 
-- __client__ use [paho.mqtt](github.com/eclipse/paho.mqtt.golang) pub/sub mqtt msg
-- __spec__ provide message spec topics that communicate with the platform, you can find the
-  spec [here](https://docs.tkeel.io/developer_cookbook/iothub/message_spec)
-- __samples__ showing how to use the SDK
+⽀持MQTT 协议版本：3.1.1
+golang version：1.16+
 
-## Go Device SDK Features
+## SDK 安装
+
+## SDK 功能列表
 
 
 - Sends raw/telemetry/attribute message to IoT Hub.
@@ -19,7 +18,7 @@ Go device sdk includes the following packages:
 - Supports auto reconnect.
 - Buffers data when the network connection is down.
 
-## SDK API List
+## SDK API 列表
 
 
 |         API         | Function                                   |

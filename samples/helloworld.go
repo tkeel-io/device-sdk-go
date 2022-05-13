@@ -16,8 +16,8 @@ import (
 
 const (
     _brokerAddr = "tcp://139.198.112.150:1883"
-    _username   = "iotd-a8fb1ca5-b5a0-4bfd-a9d8-8a88d923f9df"
-    _pwd        = "MzY1MGM1NjYtZmVjYy0zOTE3LWIzMzgtMTQyM2IwMWJjMGYw"
+    _username   = "iotd-ddbbba2c-0f35-4943-abf3-ab789a68f864"
+    _pwd        = "NmFlODBlYzQtMjdiMi0zMzM0LTkyMTMtMTU2NmI5NGFmOWVh"
 )
 
 func main() {
@@ -61,7 +61,14 @@ func rawTopicHandler(cli paho.Client, message paho.Message) {
 
 func deviceValue() ([]byte, error) {
     mv := map[string]interface{}{
-        "humidity": rand.Intn(20),
+        "humidity":      rand.Intn(20),
+        "temperature":   rand.Intn(20),
+        "pressure":      1015.3,
+        "windDirection": 21,
+        "windSpeed":     1.2,
+        "latitude":      29.10,
+        "longtidude":    107.05,
+        "voltage":       5.1,
     }
     return json.Marshal(mv)
 }
