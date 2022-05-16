@@ -1,5 +1,6 @@
 # tkeel device sdk for go
 
+English|[中文](README_zh.md)
 
 Connect devices to the tKeel IoT Hub.
 
@@ -91,5 +92,5 @@ cli := client.NewClient(_brokerAddr, _username, _pwd)(
 > you can use Withxx func set when new client like **_client.WithQoS(1)_**
 
 ## Samples
-[helloword](samples/helloword.go)
+[helloworld](samples/helloworld.go)
 

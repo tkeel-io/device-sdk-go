@@ -1,5 +1,6 @@
 # tkeel device sdk for go
 
+[English](README.md)|中文
 
 本章节介绍了如何安装和配置设备 SDK，以及提供了相关例⼦来演示如何使⽤设备 SDK上报设备数据以及服务调⽤
 
@@ -84,5 +85,5 @@ cli := client.NewClient(_brokerAddr, _username, _pwd)(
 > 上述参数为必须设置的参数, 如果你想要创建支持 ssl、qos 及其他属性的 client 可以在创建是附加属性就像这样 **_client.WithQoS(1)_**
 
 ## 例子
-[helloword](samples/helloword.go)
+[helloworld](samples/helloworld.go)
 
