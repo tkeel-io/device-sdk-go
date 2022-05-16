@@ -91,5 +91,5 @@ cli := client.NewClient(_brokerAddr, _username, _pwd)(
 > you can use Withxx func set when new client like **_client.WithQoS(1)_**
 
 ## Samples
-[examples](examples/tkeel.go)
+[helloword](samples/helloword.go)
 
