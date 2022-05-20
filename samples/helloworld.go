@@ -47,6 +47,7 @@ func main() {
 	select {}
 }
 
+//
 func attributesTopicHandler(cli paho.Client, message paho.Message) {
 	fmt.Printf("attributes=%s\n", string(message.Payload()))
 }
