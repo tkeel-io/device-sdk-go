@@ -51,6 +51,7 @@ import "github.com/tkeel-io/device-sdk-go"
 
 ```go
 // 创建默认的 client
+_brokerAddr = "tcp://139.198.112.150:1883"
 cli := client.NewClient(_brokerAddr, _username, _pwd)()
 
 // 连接到 IoT Hub
@@ -68,9 +69,9 @@ cli.Close()
 
 ```go
 // 创建支持 ssl 的client
+_brokerAddr := "ssl://139.198.112.150:1883"
 cli := client.NewClient(_brokerAddr, _username, _pwd)(
-        client.WithUseSSL(true),
-        client.WithServerCert("your cert file"))
+        client.WithUseSSL(true))
 
 ```
 

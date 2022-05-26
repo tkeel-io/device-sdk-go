@@ -1,14 +1,17 @@
 package main
 
 import (
-	"context"
 	"encoding/json"
+
+	"github.com/pkg/errors"
+)
+
+import (
+	"context"
 	"fmt"
 	"log"
 	"math/rand"
 	"time"
-
-	"github.com/pkg/errors"
 
 	paho "github.com/eclipse/paho.mqtt.golang"
 
