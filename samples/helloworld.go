@@ -13,16 +13,14 @@ import (
 	"math/rand"
 	"time"
 
-	paho "github.com/eclipse/paho.mqtt.golang"
-
 	"github.com/tkeel-io/device-sdk-go/client"
 	"github.com/tkeel-io/device-sdk-go/util/wait"
 )
 
 const (
 	_brokerAddr = "tcp://192.168.123.9:31883"
-	_username   = "iotd-6a91c356-9288-4635-aed3-bfd1609e2c58"
-	_pwd        = "YmVmOGJiNTMtMGJmMi0zNmJiLWI4ZDItMTg5MzdjMjFiMjUw"
+	_username   = "iotd-43b5b654-5d29-4464-9a87-822d3aa0957d"
+	_pwd        = "ZjI1M2IyNGMtNjNjZi0zMzM5LWFlMDMtYjBkOWVlYTQ4ZDNh"
 )
 
 func main() {
@@ -51,18 +49,21 @@ func main() {
 }
 
 //
-func attributesTopicHandler(cli paho.Client, message paho.Message) {
+func attributesTopicHandler(message client.Message) (interface{}, error) {
 	fmt.Printf("attributes=%s\n", string(message.Payload()))
+	return nil, nil
 }
 
 //
-func commandsTopicHandler(cli paho.Client, message paho.Message) {
+func commandsTopicHandler(message client.Message) (interface{}, error) {
 	fmt.Printf("commands=%s\n", string(message.Payload()))
+	return "success", nil
 }
 
 //
-func rawTopicHandler(cli paho.Client, message paho.Message) {
+func rawTopicHandler(message client.Message) (interface{}, error) {
 	fmt.Printf("rawTopic=%s\n", string(message.Payload()))
+	return nil, nil
 }
 
 func deviceValue() ([]byte, error) {

@@ -4,7 +4,9 @@ import (
 	"context"
 	"crypto/tls"
 	"crypto/x509"
+	"encoding/json"
 	"io/ioutil"
+	"time"
 
 	"github.com/hashicorp/go-multierror"
 
@@ -32,13 +34,20 @@ type Client interface {
 	// SubscribeCommand sub command
 	SubscribeCommand(ctx context.Context, handler MessageHandler) error
 
+	// CommandResponse  response  command
+	CommandResponse(ctx context.Context, commandName string, payload interface{}) error
+
 	// Close client
 	Close()
 
 	// Connect to IoT Hub
 	Connect() (err error)
 }
-type MessageHandler = paho.MessageHandler
+
+// Message is a message received from the broker.
+type Message paho.Message
+
+type MessageHandler = func(message Message) (interface{}, error)
 
 type MqttClient struct {
 	host     string
@@ -46,6 +55,7 @@ type MqttClient struct {
 	password string
 	opts     *mqttClientOptions
 	client   paho.Client
+	stop     chan struct{}
 }
 
 func (mc *MqttClient) PublishRaw(ctx context.Context, payload interface{}) error {
@@ -68,12 +78,26 @@ func (mc *MqttClient) SubscribeAttribute(ctx context.Context, handler MessageHan
 	return mc.on(spec.AttributeTopic, handler)
 }
 
+func (mc *MqttClient) CommandResponse(ctx context.Context, commandName string, payload interface{}) error {
+	// 组装命令返回
+	resp, _ := json.Marshal(map[string]interface{}{
+		commandName: map[string]interface{}{
+			"output": map[string]interface{}{
+				"ts":    time.Now().Unix(),
+				"value": payload,
+			},
+		},
+	})
+	return mc.publish(spec.CommandRespTopic, resp)
+}
+
 func (mc *MqttClient) SubscribeCommand(ctx context.Context, handler MessageHandler) error {
 	return mc.on(spec.CommandTopic, handler)
 }
 
 func (mc *MqttClient) Close() {
 	if mc != nil && mc.client != nil {
+		close(mc.stop)
 		mc.client.Disconnect(10000)
 	}
 }
@@ -93,6 +117,7 @@ func NewClient(host, username, passwd string) func(opts ...Option) Client {
 			password: passwd,
 			client:   nil,
 			opts:     op,
+			stop:     make(chan struct{}),
 		}
 	}
 }
@@ -170,5 +195,23 @@ func (mc *MqttClient) publish(topic spec.Topic, payload interface{}) error {
 }
 
 func (mc *MqttClient) on(topic spec.Topic, handler MessageHandler) error {
-	return mc.client.Subscribe(topic.String(), byte(mc.opts.qos), handler).Error()
+	return mc.client.Subscribe(topic.String(), byte(mc.opts.qos), func(client paho.Client, msg paho.Message) {
+		resp, err := handler(msg)
+		if err != nil {
+			return
+		}
+		if topic == spec.CommandTopic && resp != nil {
+			// TODO: try
+			py := msg.Payload()
+			vv := map[string]interface{}{}
+			if err := json.Unmarshal(py, &vv); err != nil {
+				return
+			}
+			// 只会有一个方法
+			for method, _ := range vv {
+				_ = mc.CommandResponse(context.TODO(), method, resp)
+				break
+			}
+		}
+	}).Error()
 }
