@@ -14,22 +14,22 @@ import (
 
 // Client is the interface for device-sdk-go client implementation.
 type Client interface {
-	// PublishRaw Raw for publish raw msg
+	// PublishRaw  for publish raw msg
 	PublishRaw(ctx context.Context, payload interface{}) error
 
-	// PublishTelemetry Telemetry for publish telemetry msg
+	// PublishTelemetry  for publish telemetry msg
 	PublishTelemetry(ctx context.Context, payload interface{}) error
 
-	// PublishAttribute Attribute for publish attribute msg
+	// PublishAttribute  for publish attribute msg
 	PublishAttribute(ctx context.Context, payload interface{}) error
 
-	// SubscribeRaw OnRaw sub attribute change
+	// SubscribeRaw  sub attribute change
 	SubscribeRaw(ctx context.Context, handler MessageHandler) error
 
-	// SubscribeAttribute OnAttribute sub attribute change
+	// SubscribeAttribute  sub attribute change
 	SubscribeAttribute(ctx context.Context, handler MessageHandler) error
 
-	// SubscribeCommand OnCommand sub command
+	// SubscribeCommand sub command
 	SubscribeCommand(ctx context.Context, handler MessageHandler) error
 
 	// Close client
