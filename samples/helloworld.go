@@ -1,17 +1,14 @@
 package main
 
 import (
-	"encoding/json"
-
-	"github.com/pkg/errors"
-)
-
-import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"log"
 	"math/rand"
 	"time"
+
+	"github.com/pkg/errors"
 
 	"github.com/tkeel-io/device-sdk-go/client"
 	"github.com/tkeel-io/device-sdk-go/util/wait"
